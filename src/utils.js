@@ -1,5 +1,7 @@
 const fs = require('fs');
 const lockfile = require('proper-lockfile');
+const DISCONNECT = "disconnect";
+const DONE = "done";
 
 const fileName = "messages.txt";
 
@@ -27,4 +29,4 @@ async function writeMessageToFile(message) {
     }
 }
 
-module.exports = {sleep, writeMessageToFile};
+module.exports = {sleep, writeMessageToFile, DISCONNECT, DONE};

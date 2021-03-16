@@ -1,3 +1,5 @@
+const {DISCONNECT, DONE} = require("./utils");
+
 let messagesApiCounter = 0;
 let workerPidToCreationDateMap = new Map();
 let pidToWorkerMap = new Map();
@@ -27,7 +29,7 @@ function removeWorker(pid) {
     console.log(`Going to remove worker ${pid}`);
     let workerToDisconnect = pidToWorkerMap.get(pid);
     if (workerToDisconnect) {
-        workerToDisconnect.send({message: "disconnect"});
+        workerToDisconnect.send({message: DISCONNECT});
         workerPidToCreationDateMap.delete(pid);
         pidToWorkerMap.delete(pid);
     }
@@ -46,7 +48,7 @@ function listenToMessageEvent(worker) {
     worker.on('message', function (message) {
         let workerPid = worker.process.pid;
         console.log(`Master ${process.pid} receives message '${JSON.stringify(message)}' from worker ${workerPid}`);
-        if (message.message === "done") {
+        if (message.message === DONE) {
             busyWorkers.delete(workerPid);
         }
     });
@@ -79,7 +81,7 @@ async function handleMaster(app, cluster) {
     setInterval(function () {
         console.log("Master is checking for old workers to remove");
         removeOldWorkers();
-    }, 20000);
+    }, passedTime);
 
     app.get('/statistics', function (req, res) {
         let result = {

@@ -23,6 +23,7 @@ async function writeMessageToFile(message) {
         release();
     } catch (e) {
         console.log("error: " + e);
+        //TODO: retry operation
     }
 }
 
